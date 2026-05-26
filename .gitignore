@@ -1,0 +1,10 @@
+.env
+venv/
+__pycache__/
+.pytest_cache/
+app/uploads/
+*.pyc
+uploads/
+test_images/
+yolov8n.pt
+.DS_Store
