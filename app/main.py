@@ -32,6 +32,7 @@ origins = [
     "http://127.0.0.1:8000",
     "http://localhost:8000",
     "https://echelon-frontend-seven.vercel.app",
+    "https://github.com/morklv/echelon-frontend",
 ]
 
 app.add_middleware(
