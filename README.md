@@ -67,6 +67,12 @@ The project was built using FastAPI, PostgreSQL, OpenCV, YOLOv8, WebSockets, and
 
 ---
 
+## Demo Video
+
+[Watch ECHELON Demo](https://youtu.be/dg6amVi7ups)
+
+---
+
 ## Screenshots
 
 ### Operational Dashboard
