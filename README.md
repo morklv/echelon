@@ -4,74 +4,82 @@ Operational Intelligence Platform for Real-Time Infrastructure Monitoring and In
 
 ## Overview
 
-ECHELON is a full-stack operational intelligence platform built to support incident monitoring, infrastructure risk assessment, and operational situational awareness.
+I built ECHELON to explore how modern backend systems, computer vision, geospatial data, and AI-generated analysis could work together inside a single application.
 
-The platform combines geospatial visualization, computer vision analysis, infrastructure dependency modeling, real-time communications, and AI-generated operational summaries to help operators understand developing situations and potential downstream impacts.
+The idea started as a simple incident reporting platform, but gradually evolved into a larger project focused on operational awareness. Users can create incidents, upload images, view nearby infrastructure, analyze possible impacts, and receive automated summaries generated from the available information.
+
+The goal was not to build a perfect emergency management system. Instead, I wanted a project that would allow me to learn and combine several areas of software engineering that interested me, including backend development, databases, real-time communication, computer vision, mapping, and AI integration.
+
+ECHELON is the result of that process.
 
 The project was built using FastAPI, PostgreSQL, OpenCV, YOLOv8, WebSockets, and OpenAI-powered reporting workflows.
 
----
 
-## Features
 
-* JWT-based user authentication
-* Real-time incident management
-* Interactive geospatial dashboard
-* Infrastructure asset monitoring
-* Infrastructure dependency mapping
-* Computer vision image analysis
-* Fire and smoke detection
-* Structural damage assessment
-* Traffic activity analysis
-* Composite intelligence fusion
-* AI-generated operator briefs
-* Real-time WebSocket updates
-* Dockerized deployment
+## 
 
----
+- JWT-based user authentication
+- Real-time incident management
+- Interactive geospatial dashboard
+- Infrastructure asset monitoring
+- Infrastructure dependency mapping
+- Computer vision image analysis
+- Fire and smoke detection
+- Structural damage assessment
+- Traffic activity analysis
+- Composite intelligence fusion
+- AI-generated operator briefs
+- Real-time WebSocket updates
+- Dockerized deployment
+
+
 
 ## Technology Stack
 
 ### Backend
 
-* FastAPI
-* SQLAlchemy
-* PostgreSQL
-* Alembic
-* JWT Authentication
-* WebSockets
+- FastAPI
+- SQLAlchemy
+- PostgreSQL
+- Alembic
+- JWT Authentication
+- WebSockets
 
 ### Computer Vision
 
-* OpenCV
-* YOLOv8
-* NumPy
+- OpenCV
+- YOLOv8
+- NumPy
 
 ### AI
 
-* OpenAI API
-* Intelligence Fusion Engine
+- OpenAI API
+
+### Custom Analysis
+
+- Risk scoring and analysis aggregation
+- Infrastructure impact assessment
+- Dependency analysis
 
 ### Frontend
 
-* HTML
-* CSS
-* JavaScript
-* Leaflet Maps
+- HTML
+- CSS
+- JavaScript
+- Leaflet Maps
 
 ### Deployment
 
-* Docker
-* Render
-* GitHub
+- Docker
+- Render
+- GitHub
 
----
 
 ## Demo Video
 
 [Watch ECHELON Demo](https://youtu.be/dg6amVi7ups)
 
----
+
 
 ## Screenshots
 
@@ -79,9 +87,8 @@ The project was built using FastAPI, PostgreSQL, OpenCV, YOLOv8, WebSockets, and
 
 ![Operational Dashboard](screenshots/dashboard.png)
 
-The main ECHELON dashboard provides a real-time operational view of incidents, critical infrastructure assets, computer vision analysis results, and intelligence updates.
+The dashboard serves as the central view of the application, bringing together incidents, infrastructure information, image analysis results, and live updates in one place.
 
----
 
 ### Incident Creation Workflow
 
@@ -89,47 +96,47 @@ The main ECHELON dashboard provides a real-time operational view of incidents, c
 
 Operators can create incidents directly from the map interface by selecting a location, assigning severity levels, and providing operational context.
 
----
 
 ### Computer Vision & Intelligence Analysis
 
+
 ![Intelligence Analysis](screenshots/intelligence-analysis.png)
 
-Uploaded imagery is processed through multiple analysis modules including structural damage assessment, hazard detection, fire and smoke analysis, scene assessment, traffic activity analysis, and composite intelligence fusion.
+When an image is uploaded, ECHELON runs it through a series of computer vision modules that look for potential hazards, signs of structural damage, traffic activity, and other details that may be relevant to the situation.
 
----
+
 
 ### AI-Generated Operator Brief
 
 ![Operator Brief](screenshots/operator-brief.png)
 
-Analysis outputs are synthesized into an operational briefing that summarizes risks, evidence, affected assets, and recommended actions.
+After an image is analyzed, ECHELON puts the results into a short, easy-to-read summary. Rather than digging through multiple analysis outputs, the user can quickly see what was detected, what infrastructure may be impacted, and why the incident might matter.
 
----
+
 
 ### Infrastructure Impact Assessment
 
 ![Infrastructure Impact Assessment](screenshots/infrastructure-impact.png)
 
-Nearby infrastructure assets are evaluated to estimate operational impact and generate infrastructure-focused recommendations.
+Echelon calculates and generates a radius, within which assets are directly affected by an incident.
 
----
+
 
 ### Dependency Cascade Visualization
 
 ![Dependency Cascade Visualization](screenshots/dependency-cascade.png)
 
-Infrastructure dependency relationships are used to identify potential cascading effects and downstream operational risks across connected assets.
+Infrastructure dependencies can be visualized to show how disruption to one asset may affect other connected assets. This makes it easier to understand possible ripple effects throughout the network.
 
----
+
 
 ## Real-Time Event Feed
 
 ![Real-Time Event Feed](screenshots/realtime-feed.png)
 
-ECHELON uses WebSockets to push live updates to connected clients. Events such as incident creation, infrastructure status changes, image analysis progress, and completed intelligence reports are broadcast in real time without requiring a page refresh.
+ECHELON uses WebSockets so that changes appear instantly across the application. When a new incident is created, an image is analyzed, or infrastructure information is updated, connected users see those changes in real time without refreshing the page.
 
----
+
 
 ## System Architecture
 
@@ -142,7 +149,7 @@ ECHELON uses WebSockets to push live updates to connected clients. Events such a
 7. Infrastructure dependency analysis evaluates potential cascading impacts.
 8. WebSocket broadcasts provide real-time updates to connected clients.
 
----
+
 
 ## Computer Vision Modules
 
@@ -164,7 +171,7 @@ Evaluates crowd density, vehicle activity, and abnormal clustering behavior.
 
 ### Traffic Activity Analysis
 
-Assesses roadway activity and traffic density using detected vehicle and pedestrian counts.
+Assesses roadway activity and traffic density using detected vehicles count.
 
 ### Intelligence Fusion
 
@@ -174,20 +181,16 @@ Combines outputs from multiple analysis modules into a unified operational risk 
 
 ## Installation
 
-Clone the repository:
 
 ```bash
 git clone https://github.com/morklv/echelon.git
 cd backend
 ```
 
-Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
-
-Create a `.env` file:
 
 ```env
 DATABASE_URL=your_database_url
@@ -195,27 +198,23 @@ SECRET_KEY=your_secret_key
 OPENAI_API_KEY=your_openai_key
 ```
 
-Run the application:
-
 ```bash
 uvicorn app.main:app --reload
 ```
 
----
 
-## Future Improvements
 
-* Improved fire and smoke classification accuracy
-* Expanded infrastructure dependency modeling
-* Additional hazard detection modules
-* Historical incident analytics
-* Multi-region infrastructure datasets
-* Enhanced operator workflows
-* Advanced geospatial intelligence features
+## What can be done in the future:
+
+One area I would like to continue improving is the computer vision side of the project.
+
+The current image analysis pipeline was built as a practical way to learn OpenCV and integrate computer vision into a larger system. It provides useful signals, but it was never intended to be a production-grade detection system.
+
+Going forward, I would like to spend more time studying computer vision and improving the accuracy of the analysis modules, reducing false positives, and exploring more advanced approaches that could bring the platform closer to professional-grade performance.
 
 ---
 
-## Author
+## Created by
 
 Mark 
 
