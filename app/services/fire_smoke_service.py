@@ -104,14 +104,14 @@ def analyze_fire_smoke(image_path: str):
     if smoke_ratio < 0.015:
         smoke_score *= 0.35
 
-    real_fire_signal = fire_score >= 0.30 and fire_ratio >= 0.0025
+    real_fire_signal = fire_score >= 0.40 and fire_ratio >= 0.006
     real_smoke_signal = smoke_score >= 0.35 and smoke_ratio >= 0.015
 
     hazard_confidence = max(fire_score, smoke_score)
     strong_smoke_signal = smoke_score >= 0.75 and smoke_ratio >= 0.08
-    small_fire_signal = fire_ratio >= 0.0008
+    meaningful_fire_signal = fire_score >= 0.30 and fire_ratio >= 0.006
 
-    if strong_smoke_signal and small_fire_signal:
+    if strong_smoke_signal and meaningful_fire_signal:
         hazard_tier = "ACTIVE_FIRE"
 
     elif real_fire_signal and real_smoke_signal:
