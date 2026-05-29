@@ -13,7 +13,7 @@ router = APIRouter(
     prefix = "/infrastructure",
     tags = ["infrastructure"]
 )
-# creates router group, all routes here start with /infrastructure
+
 
 
 @router.post("/", response_model = schemas.InfrastructureAssetResponse)
@@ -107,13 +107,10 @@ def update_infrastructure_asset(
     # updates point/line geometry type
 
     asset.geometry_coordinates = asset_update.geometry_coordinates
-    # updates optional bridge/route geometry coordinates
 
     db.commit()
-    # saves changes into PostgreSQL
 
     db.refresh(asset)
-    # reloads updated asset from database
+
 
     return asset
-    # returns updated infrastructure asset

@@ -91,71 +91,62 @@ def fuse_intelligence(image_analysis: dict):
         # medium traffic activity adds small operational risk
 
     risk_score = min(risk_score, 100)
-    # caps risk score at 100
+
 
     if risk_score >= 50:
         risk_tier = "CRITICAL"
-        # highest operational priority
+
 
     elif risk_score >= 40:
         risk_tier = "HIGH"
-        # serious but not maximum priority
+
 
     elif risk_score >= 25:
         risk_tier = "MEDIUM"
-        # moderate concern
+
 
     else:
         risk_tier = "LOW"
-        # low operational risk
+
 
     primary_hazard = fire_smoke_tier
-    # dedicated fire/smoke module becomes primary hazard source
+
 
     if primary_hazard in ["NONE", "NO_VISIBLE_FIRE_SMOKE", "UNKNOWN"]:
-        # if fire/smoke module found nothing useful
+
 
         primary_hazard = hazard_tier
-        # fall back to old hazard module
+ 
 
     if risk_score >= 65:
         recommended_action = "Escalate immediately and dispatch field verification"
-        # critical action
+
 
     elif risk_score >= 50:
         recommended_action = "Escalate for operator review"
-        # high-priority action
+
 
     elif risk_score >= 25:
         recommended_action = "Monitor and verify with additional evidence"
-        # medium action
+
 
     else:
         recommended_action = "Log and monitor"
-        # low-priority action
 
     return {
         "overall_risk_score": risk_score,
-        # final numeric risk score
 
         "risk_tier": risk_tier,
-        # final risk label
 
         "primary_hazard": primary_hazard,
-        # main hazard from fire/smoke or fallback hazard module
 
         "fire_smoke_tier": fire_smoke_tier,
-        # dedicated fire/smoke result
 
         "structural_damage": damage_tier,
-        # main structural concern
 
         "recommended_action": recommended_action,
-        # operational recommendation
 
         "scene_density": density_tier,
-        # includes crowd/scene density
 
         "traffic_density": traffic_density
-        # includes traffic risk
     }

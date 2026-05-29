@@ -196,22 +196,3 @@ def get_nearby_infrastructure_for_incident(
         "operational_risk_score": infrastructure_result["operational_risk_score"],
         "infrastructure_recommendation": infrastructure_recommendation
     }
-    # returns infrastructure intelligence to frontend
-
-    #Title:
-#Hayward Power Grid Failure
-
-#Description:
-#Smoke and electrical fault activity reported near Hayward Regional Power Substation. Potential regional power instability affecting dependent infrastructure.
-
-#Category:
-#infrastructure
-
-#Severity:
-#5
-
-#Latitude:
-#37.6368
-
-#Longitude:
-#-122.0985"

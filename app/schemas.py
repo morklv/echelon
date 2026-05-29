@@ -126,7 +126,6 @@ class InfrastructureAssetResponse(InfrastructureAssetCreate):
     # schema for sending infrastructure asset back to frontend
 
     id: int
-    # database id created by PostgreSQL
 
     risk_status: str = "NORMAL"
     # sends NORMAL, DIRECT_RISK, or CASCADE_RISK to frontend

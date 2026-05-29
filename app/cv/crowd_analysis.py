@@ -27,7 +27,6 @@ def analyze_scene_from_objects(detected_objects: list):
     # counts detected vehicles
 
     total_count = person_count + vehicle_count
-    # total operational entities in scene
 
     if person_count >= 50:
         density_tier = "CRITICAL"

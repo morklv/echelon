@@ -43,11 +43,10 @@ def analyze_hazard(image_path: str, detected_objects: list = None):
     # converts to grayscale
 
     labels = [obj["label"] for obj in detected_objects]
-    #extracts yolo labels like traffic light, car, person
+
 
     traffic_light_count = labels.count("traffic light")
 
-    #for crowded places to avoid false fire alarm
     person_count = labels.count("person")
     vehicle_labels = ["car", "truck", "bus", "motorcycle", "bicycle"]
     vehicle_count = sum(
@@ -57,14 +56,12 @@ def analyze_hazard(image_path: str, detected_objects: list = None):
     urban_scene_detected = person_count >= 3 and vehicle_count >= 1
 
     variance = cv2.Laplacian(gray, cv2.CV_64F).var()
-    # computes texture variance, high variance often indicates chaotic flame texture
     
 
     hazard_tier = "NONE"
     # default fallback classification
 
     hazard_confidence = 0.0
-    # default fallback confidence
 
 
     if traffic_light_count >= 2 and fire_ratio < 0.05:
@@ -108,33 +105,23 @@ def analyze_hazard(image_path: str, detected_objects: list = None):
 
 
     fire_score = min(fire_ratio / 0.08, 1.0)
-    # converts fire_ratio into score from 0 to 1
-    # if fire_ratio reaches 0.08 or higher, score becomes 1.0
 
     texture_score = min(variance / 500, 1.0)
-    # converts texture variance into score from 0 to 1
-    # higher texture chaos increases confidence
 
-    hazard_confidence = (fire_score * 0.7) + (texture_score * 0.3)
-    # combines color evidence and texture evidence
-    # fire color matters more, so it gets 70%
-    # texture matters less, so it gets 30%
-
-    
+    hazard_confidence = (fire_score * 0.7) + (texture_score * 0.3)    
 
     return {
         "fire_pixel_ratio": round(float(fire_ratio), 4),
-        # amount of image detected as fire-colored
 
         "smoke_pixel_ratio": round(float(smoke_ratio), 4),
-        # amount of image detected as smoke-like
+
 
         "texture_variance": round(float(variance), 2),
-        # texture chaos score
+
 
         "hazard_confidence": round(float(hazard_confidence), 2),
-        # final confidence score from 0 to 1
+
 
         "hazard_tier": hazard_tier
-        # final hazard classification
+
     }

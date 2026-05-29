@@ -1,50 +1,38 @@
 from fastapi import APIRouter, Depends
-# imports router and dependency injection
-
 from sqlalchemy.orm import Session
-# imports database session type
-
 from app import models
-# imports database models
-
 from app.database import get_db
-# imports database dependency
 
 
 router = APIRouter(
     prefix="/infrastructure-dependencies",
     tags=["infrastructure-dependencies"]
 )
-# creates dependency graph router
 
 
 @router.get("/")
 def get_infrastructure_dependencies(
     db: Session = Depends(get_db)
 ):
-    # returns infrastructure dependency graph for frontend visualization
-
     dependencies = db.query(models.InfrastructureDependency).all()
-    # loads all dependency relationships
+  
 
     graph_edges = []
-    # stores frontend-ready graph edges
 
     for dependency in dependencies:
-        # loops through each dependency relationship
 
         source_asset = db.query(models.InfrastructureAsset).filter(
             models.InfrastructureAsset.id == dependency.source_asset_id
         ).first()
-        # loads source asset
+
 
         dependent_asset = db.query(models.InfrastructureAsset).filter(
             models.InfrastructureAsset.id == dependency.dependent_asset_id
         ).first()
-        # loads dependent asset
+
 
         if not source_asset or not dependent_asset:
-            # skips broken dependency rows
+
 
             continue
 
@@ -79,4 +67,3 @@ def get_infrastructure_dependencies(
         "dependency_count": len(graph_edges),
         "dependencies": graph_edges
     }
-    # returns graph data
