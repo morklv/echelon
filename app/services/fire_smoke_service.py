@@ -8,6 +8,15 @@ def analyze_fire_smoke(image_path: str):
     if image is None:
         return {"error": "Image could not be read"}
 
+    max_width = 1000
+
+    height, width = image.shape[:2]
+
+    if width > max_width:
+        scale = max_width / width
+        new_height = int(height * scale)
+        image = cv2.resize(image, (max_width, new_height))
+
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 

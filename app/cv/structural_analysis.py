@@ -10,6 +10,15 @@ def analyze_structure(image_path: str, detected_objects: list = None):
             "error": "Image could not be loaded"
         }
 
+    max_width = 1000
+
+    height, width = image.shape[:2]
+
+    if width > max_width:
+        scale = max_width / width
+        new_height = int(height * scale)
+        image = cv2.resize(image, (max_width, new_height))
+
     if detected_objects is None:
         detected_objects = []
 

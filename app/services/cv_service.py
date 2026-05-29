@@ -17,6 +17,15 @@ def analyze_image(image_path: str):
             "error": "Image could not be loaded"
         }
 
+    max_width = 1000
+
+    height, width = image.shape[:2]
+
+    if width > max_width:
+        scale = max_width / width
+        new_height = int(height * scale)
+        image = cv2.resize(image, (max_width, new_height))
+
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blur_score = cv2.Laplacian(gray, cv2.CV_64F).var()
     is_blurry = blur_score < 100
