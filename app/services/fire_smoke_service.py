@@ -6,36 +6,72 @@ def analyze_fire_smoke(image_path: str):
     image = cv2.imread(image_path)
 
     if image is None:
-        return {
-            "error": "Image could not be read"
-        }
+        return {"error": "Image could not be read"}
 
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-    total_pixels = image.shape[0] * image.shape[1]
+    height, width = image.shape[:2]
+    total_pixels = height * width
 
-    fire_lower_1 = np.array([0, 100, 130])
-    fire_upper_1 = np.array([25, 255, 255])
+    h, s, v = cv2.split(hsv)
 
-    fire_lower_2 = np.array([170, 100, 130])
-    fire_upper_2 = np.array([180, 255, 255])
+    # More restrictive fire detection:
+    # Requires bright red/orange/yellow, not just red paint.
+    fire_red = cv2.inRange(hsv, np.array([0, 140, 170]), np.array([18, 255, 255]))
+    fire_orange = cv2.inRange(hsv, np.array([18, 120, 180]), np.array([45, 255, 255]))
 
-    fire_mask_1 = cv2.inRange(hsv, fire_lower_1, fire_upper_1)
-    fire_mask_2 = cv2.inRange(hsv, fire_lower_2, fire_upper_2)
+    fire_mask = cv2.bitwise_or(fire_red, fire_orange)
 
-    fire_mask = cv2.bitwise_or(fire_mask_1, fire_mask_2)
+    # Smoke detection:
+    # Gray, medium brightness, low saturation.
+    smoke_mask = cv2.inRange(hsv, np.array([0, 0, 60]), np.array([180, 55, 185]))
 
-    smoke_lower = np.array([0, 0, 25])
-    smoke_upper = np.array([180, 65, 190])
+    # Suppress very bright sky/cloud regions.
+    bright_sky_mask = cv2.inRange(hsv, np.array([0, 0, 185]), np.array([180, 70, 255]))
+    smoke_mask[bright_sky_mask > 0] = 0
 
-    smoke_mask = cv2.inRange(hsv, smoke_lower, smoke_upper)
+    # Suppress bottom road/asphalt zone unless there is fire nearby.
+    bottom_start = int(height * 0.65)
+    smoke_mask[bottom_start:, :] = 0
 
     kernel = np.ones((5, 5), np.uint8)
 
     fire_mask = cv2.morphologyEx(fire_mask, cv2.MORPH_OPEN, kernel)
     smoke_mask = cv2.morphologyEx(smoke_mask, cv2.MORPH_OPEN, kernel)
     smoke_mask = cv2.morphologyEx(smoke_mask, cv2.MORPH_CLOSE, kernel)
+
+    # Remove huge flat background regions from smoke mask.
+    num_labels, labels, stats, _ = cv2.connectedComponentsWithStats(smoke_mask)
+
+    filtered_smoke = np.zeros_like(smoke_mask)
+
+    for i in range(1, num_labels):
+        area = stats[i, cv2.CC_STAT_AREA]
+        x = stats[i, cv2.CC_STAT_LEFT]
+        y = stats[i, cv2.CC_STAT_TOP]
+        w = stats[i, cv2.CC_STAT_WIDTH]
+        h_box = stats[i, cv2.CC_STAT_HEIGHT]
+
+        area_ratio = area / total_pixels
+        width_ratio = w / width
+        height_ratio = h_box / height
+
+        # Reject massive sky/road-like regions.
+        if area_ratio > 0.35:
+            continue
+
+        # Reject long horizontal bands.
+        if width_ratio > 0.55 and height_ratio < 0.25:
+            continue
+
+        # Reject tiny noise.
+        if area_ratio < 0.001:
+            continue
+
+        filtered_smoke[labels == i] = 255
+
+    smoke_mask = filtered_smoke
 
     fire_pixels = cv2.countNonZero(fire_mask)
     smoke_pixels = cv2.countNonZero(smoke_mask)
@@ -46,41 +82,30 @@ def analyze_fire_smoke(image_path: str):
     texture_variance = cv2.Laplacian(gray, cv2.CV_64F).var()
     mean_brightness = float(np.mean(gray))
 
-    fire_score = min(fire_ratio * 220, 1.0)
-    smoke_score = min(smoke_ratio * 5.5, 1.0)
+    # Fire should not be triggered by red infrastructure alone.
+    fire_score = min(fire_ratio * 40, 1.0)
 
-    vehicle_scene_detected = (
-        smoke_ratio > 0.45
-        and texture_variance > 1500
-    )
+    # Smoke needs meaningful filtered smoke area.
+    smoke_score = min(smoke_ratio * 8, 1.0)
 
-    if mean_brightness > 135 and smoke_ratio < 0.30:
-        smoke_score *= 0.45
-
-    if texture_variance > 900 and fire_ratio < 0.002:
-        smoke_score *= 0.45
-
-    if vehicle_scene_detected:
-        smoke_score *= 0.15
-        fire_score *= 0.25
-
-    if fire_ratio < 0.002:
+    # Extra penalty when scene has weak fire evidence.
+    if fire_ratio < 0.006:
         fire_score *= 0.35
 
-    real_fire_signal = (
-        fire_ratio >= 0.0025
-        and fire_score >= 0.40
-    )
+    if smoke_ratio < 0.015:
+        smoke_score *= 0.35
 
-    real_smoke_signal = (
-        smoke_ratio >= 0.12
-        and smoke_score >= 0.45
-        and mean_brightness < 175
-    )
+    real_fire_signal = fire_score >= 0.30 and fire_ratio >= 0.0025
+    real_smoke_signal = smoke_score >= 0.35 and smoke_ratio >= 0.015
 
     hazard_confidence = max(fire_score, smoke_score)
+    strong_smoke_signal = smoke_score >= 0.75 and smoke_ratio >= 0.08
+    small_fire_signal = fire_ratio >= 0.0008
 
-    if real_fire_signal and real_smoke_signal:
+    if strong_smoke_signal and small_fire_signal:
+        hazard_tier = "ACTIVE_FIRE"
+
+    elif real_fire_signal and real_smoke_signal:
         hazard_tier = "ACTIVE_FIRE"
 
     elif real_fire_signal:

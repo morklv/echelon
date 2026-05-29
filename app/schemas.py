@@ -37,7 +37,7 @@ class IncidentCreate(BaseModel):
         max_length = 50
     )
 
-    severity: int = 1
+    severity: int = Field(ge = 1, le= 5)
 
     latitude:  Optional[float] = Field(
         ge = -90,

@@ -174,7 +174,7 @@ def get_nearby_infrastructure_for_incident(
     infrastructure_result = find_nearby_assets(
         db=db,
         incident=incident,
-        radius_km = 3.0
+        radius_km = 2.0
     )
     # calculates direct/cascade infrastructure impact
 

@@ -63,22 +63,16 @@ def seed_demo_data():
                 "risk_status": "NORMAL",
             },
             {
-                "name": "Port of Redwood City",
-                "asset_type": "seaport",
-                "latitude": 37.5075,
-                "longitude": -122.2132,
-                "criticality": "MEDIUM",
-                "description": "Regional maritime cargo and industrial port.",
-                "operational_status": "NORMAL",
-                "risk_status": "NORMAL",
-            },
-            {
-                "name": "Hayward Executive Airport",
-                "asset_type": "airport",
-                "latitude": 37.6589,
-                "longitude": -122.1217,
-                "criticality": "MEDIUM",
-                "description": "Regional aviation and emergency logistics airfield.",
+                "name": "U.S. Coast Guard Base Alameda",
+                "asset_type": "coast_guard_base",
+                "latitude": 37.7726,
+                "longitude": -122.3008,
+                "criticality": "HIGH",
+                "description": (
+                    "Major United States Coast Guard operational installation supporting "
+                    "maritime security, emergency response, search and rescue operations, "
+                    "logistics coordination, and regional coastal infrastructure protection."
+                ),
                 "operational_status": "NORMAL",
                 "risk_status": "NORMAL",
             },
@@ -94,7 +88,7 @@ def seed_demo_data():
             },
             {
                 "name": "PG&E Metcalf Substation",
-                "asset_type": "substation",
+                "asset_type": "industrial",
                 "latitude": 37.2370,
                 "longitude": -121.8500,
                 "criticality": "CRITICAL",
@@ -142,6 +136,17 @@ def seed_demo_data():
                 "operational_status": "NORMAL",
                 "risk_status": "NORMAL",
             },
+            {   
+                "name": "Hayward Power Grid Station",
+                "asset_type": "power_station",
+                "latitude": 37.6368,
+                "longitude": -122.0985,
+                "criticality": "HIGH",
+                "description": "A regional power infrastructure node",
+                "operational_status": "NORMAL",
+                "risk_status": "NORMAL",
+            }
+
         ]
 
         asset_objects = {}
@@ -182,10 +187,36 @@ def seed_demo_data():
                 "description": "Manufacturing operations depend on stable regional power infrastructure.",
             },
             {
-                "source_asset": "Port of Redwood City",
+                "source_asset": "Hayward Power Grid Station",
                 "dependent_asset": "Tesla Fremont Factory",
-                "dependency_type": "supply_chain",
-                "description": "Industrial material deliveries routed through regional maritime logistics.",
+                "dependency_type": "power_supply",
+                "description": (
+                    "Tesla Fremont Factory depends on uninterrupted electrical power "
+                    "for robotic manufacturing systems, automated assembly lines, "
+                    "industrial cooling systems, battery-related operations, "
+                    "logistics coordination, and facility-wide production continuity."
+                )
+            },
+            {
+                "source_asset": "Hayward Power Grid Station",
+                "dependent_asset": "Oakland International Airport",
+                "dependency_type": "power_supply",
+                "description": (
+                    "Oakland International Airport depends on continuous electrical "
+                    "power for runway lighting, radar systems, terminal operations, "
+                    "communications infrastructure, fuel systems, baggage handling, "
+                    "and emergency coordination capabilities."
+                )
+            },
+            {
+                "source_asset": "Hayward Power Grid Station",
+                "dependent_asset": "U.S. Coast Guard Base Alameda",
+                "dependency_type": "power_supply",
+                "description": ("U.S. Coast Guard Base Alameda depends on stable electrical power for "
+                    "maritime command operations, communications systems, vessel support "
+                    "infrastructure, emergency coordination capabilities, security systems, "
+                    "maintenance facilities, and regional coastal response readiness."
+                )
             },
             {
                 "source_asset": "Transbay Transit Center",
@@ -195,9 +226,12 @@ def seed_demo_data():
             },
             {
                 "source_asset": "San Francisco-Oakland Bay Bridge",
-                "dependent_asset": "San Francisco International Airport",
-                "dependency_type": "logistics",
-                "description": "Airport logistics depend on bridge transportation corridor.",
+                "dependent_asset": "Transbay Transit Center",
+                "dependency_type": "transportation",
+                "description": (
+                            "Regional transit movement and commuter flow depend on Bay Bridge "
+                            "transportation connectivity between San Francisco and the East Bay."
+                )
             },
         ]
 

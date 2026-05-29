@@ -111,6 +111,11 @@ def evaluate_asset_operational_status(
             return "AT_RISK"
             # airport systems may require monitoring
 
+        if asset_type == "coast_guard_base" and severity >= 4 and distance_km < 2.0:
+            return "AT_RISK"
+        if asset_type == "coast_guard_base" and severity >= 4 and distance_km < 3.0:
+            return "DEGRADED"
+
     # -----------------------------
     # HAZMAT
     # -----------------------------

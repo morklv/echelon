@@ -100,7 +100,7 @@ def analyze_hazard(image_path: str, detected_objects: list = None):
         hazard_tier = "SMOKE_OR_HEAT"
 
     elif smoke_ratio > 0.25 and fire_ratio < 0.01:
-        hazard_ter = "SMOKE_OR_HEAT"
+        hazard_tier = "SMOKE_OR_HEAT"
 
     else:
         hazard_tier = "NONE"

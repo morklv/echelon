@@ -35,15 +35,15 @@ def fuse_intelligence(image_analysis: dict):
     # starts total risk score at 0
 
     if density_tier == "CRITICAL":
-        risk_score += 30
+        risk_score += 10
         # critical crowd density adds major operational risk
 
     elif density_tier == "HIGH":
-        risk_score += 20
+        risk_score += 8
         # high crowd density adds meaningful risk
 
     elif density_tier == "MEDIUM":
-        risk_score += 10
+        risk_score += 7
         # medium crowd density adds minor risk
 
     if hazard_tier == "ACTIVE_FIRE":
@@ -51,7 +51,7 @@ def fuse_intelligence(image_analysis: dict):
         # old hazard module detects active fire
 
     elif hazard_tier in ["SMOKE_OR_HEAT", "SMOKE_PRESENT"]:
-        risk_score += 25
+        risk_score += 15
         # old hazard module detects smoke/heat
 
     if fire_smoke_tier == "ACTIVE_FIRE":
@@ -59,19 +59,19 @@ def fuse_intelligence(image_analysis: dict):
         # dedicated fire/smoke module detects active fire
 
     elif fire_smoke_tier == "SMOKE_PRESENT":
-        risk_score += 35
+        risk_score += 10
         # dedicated fire/smoke module detects smoke
 
     elif fire_smoke_tier == "POSSIBLE_HAZARD":
-        risk_score += 15
+        risk_score += 5
         # weak fire/smoke signal
 
     if damage_tier == "SEVERE":
-        risk_score += 40
+        risk_score += 50
         # severe structure damage is major risk
 
     elif damage_tier == "MODERATE":
-        risk_score += 25
+        risk_score += 20
         # moderate damage adds meaningful risk
 
     elif damage_tier == "MINOR":
@@ -79,25 +79,25 @@ def fuse_intelligence(image_analysis: dict):
         # minor damage adds small risk
 
     if traffic_density == "CRITICAL":
-        risk_score += 25
+        risk_score += 10
         # critical traffic activity adds major operational risk
 
     elif traffic_density == "HIGH":
-        risk_score += 15
+        risk_score += 5
         # high traffic activity adds moderate operational risk
 
     elif traffic_density == "MEDIUM":
-        risk_score += 8
+        risk_score += 3
         # medium traffic activity adds small operational risk
 
     risk_score = min(risk_score, 100)
     # caps risk score at 100
 
-    if risk_score >= 65:
+    if risk_score >= 50:
         risk_tier = "CRITICAL"
         # highest operational priority
 
-    elif risk_score >= 50:
+    elif risk_score >= 40:
         risk_tier = "HIGH"
         # serious but not maximum priority
 
