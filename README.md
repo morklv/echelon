@@ -117,6 +117,14 @@ Infrastructure dependency relationships are used to identify potential cascading
 
 ---
 
+## Real-Time Event Feed
+
+![Real-Time Event Feed](screenshots/realtime-feed.png)
+
+ECHELON uses WebSockets to push live updates to connected clients. Events such as incident creation, infrastructure status changes, image analysis progress, and completed intelligence reports are broadcast in real time without requiring a page refresh.
+
+---
+
 ## System Architecture
 
 1. Operators create incidents through the dashboard.
@@ -203,6 +211,6 @@ uvicorn app.main:app --reload
 
 ## Author
 
-Mark
+Mark 
 
 Built as a portfolio project focused on backend engineering, computer vision, geospatial systems, infrastructure monitoring, and operational intelligence workflows.
