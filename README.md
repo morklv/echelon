@@ -16,7 +16,7 @@ The project was built using FastAPI, PostgreSQL, OpenCV, YOLOv8, WebSockets, and
 
 
 
-## 
+## Whhat the Porject Can Do
 
 - JWT-based user authentication
 - Real-time incident management
@@ -97,45 +97,64 @@ The dashboard serves as the central view of the application, bringing together i
 Operators can create incidents directly from the map interface by selecting a location, assigning severity levels, and providing operational context.
 
 
-### Computer Vision & Intelligence Analysis
+## Example Incident Analyses
 
+The examples below demonstrate how Echelon combines computer vision, infrastructure analysis, and AI-generated operational summaries.
 
-![Intelligence Analysis](screenshots/intelligence-analysis.png)
+### Traffic Congestion Assessment
 
-When an image is uploaded, ECHELON runs it through a series of computer vision modules that look for potential hazards, signs of structural damage, traffic activity, and other details that may be relevant to the situation.
+Heavy vehicle congestion detected near critical transportation routes.
 
+<p align="center">
+  <img src="screenshots/traffic-image.png" width="32%">
+  <img src="screenshots/traffic-analysis.png" width="32%">
+  <img src="screenshots/traffic-brief.png" width="32%">
+</p>
 
+This example shows YOLO vehicle detection, traffic density analysis, risk scoring, and an AI-generated operator brief summarizing the operational impact on nearby infrastructure.
 
-### AI-Generated Operator Brief
+### Fire and Critical Infrastructure Incident
 
-![Operator Brief](screenshots/operator-brief.png)
+Power grid fire affecting regional infrastructure assets.
 
-After an image is analyzed, ECHELON puts the results into a short, easy-to-read summary. Rather than digging through multiple analysis outputs, the user can quickly see what was detected, what infrastructure may be impacted, and why the incident might matter.
+<p align="center">
+  <img src="screenshots/fire-image.png" width="32%">
+  <img src="screenshots/fire-analysis.png" width="32%">
+  <img src="screenshots/fire-brief.png" width="32%">
+</p>
 
+The image is processed through fire and smoke detection, structural analysis, hazard scoring, infrastructure impact assessment, and composite risk scoring. The results are then summarized into an operational briefing.
 
+### Structural Damage Assessment
 
-### Infrastructure Impact Assessment
+Visible structural damage detected near critical infrastructure.
 
-![Infrastructure Impact Assessment](screenshots/infrastructure-impact.png)
+<p align="center">
+  <img src="screenshots/bridge-image.png" width="32%">
+  <img src="screenshots/bridge-analysis.png" width="32%">
+  <img src="screenshots/bridge-brief.png" width="32%">
+</p>
 
-Echelon calculates and generates a radius, within which assets are directly affected by an incident.
+This scenario demonstrates structural damage scoring, scene assessment, infrastructure impact evaluation, and AI-assisted recommendations.
 
+### Infrastructure Dependency Analysis
 
+Critical assets can be linked through dependency relationships. When one asset becomes degraded, ECHELON evaluates potential cascading impacts across connected infrastructure.
 
-### Dependency Cascade Visualization
+<p align="center">
+  <img src="screenshots/dependency-cascade.png" width="49%">
+  <img src="screenshots/cascade-analysis.png" width="49%">
+</p>
 
-![Dependency Cascade Visualization](screenshots/dependency-cascade.png)
+In this example, a simulated power grid failure affects multiple dependent assets. The platform identifies downstream infrastructure that may be exposed and generates impact explanations to support operational planning.
 
-Infrastructure dependencies can be visualized to show how disruption to one asset may affect other connected assets. This makes it easier to understand possible ripple effects throughout the network.
+### Real-Time Operational Feed
 
+<p align="center">
+  <img src="screenshots/realtime-feed.png" width="80%">
+</p>
 
-
-## Real-Time Event Feed
-
-![Real-Time Event Feed](screenshots/realtime-feed.png)
-
-ECHELON uses WebSockets so that changes appear instantly across the application. When a new incident is created, an image is analyzed, or infrastructure information is updated, connected users see those changes in real time without refreshing the page.
-
+ECHELON uses WebSockets to keep connected users synchronized in real time. Incident creation, image analysis results, infrastructure updates, and intelligence reports are automatically pushed to the dashboard without requiring a page refresh.
 
 
 ## System Architecture
@@ -177,7 +196,7 @@ Assesses roadway activity and traffic density using detected vehicles count.
 
 Combines outputs from multiple analysis modules into a unified operational risk score and recommended action level.
 
----
+
 
 ## Installation
 
@@ -212,7 +231,7 @@ The current image analysis pipeline was built as a practical way to learn OpenCV
 
 Going forward, I would like to spend more time studying computer vision and improving the accuracy of the analysis modules, reducing false positives, and exploring more advanced approaches that could bring the platform closer to professional-grade performance.
 
----
+
 
 ## Created by
 
