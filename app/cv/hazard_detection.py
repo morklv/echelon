@@ -21,35 +21,20 @@ def analyze_hazard(image_path: str, detected_objects: list = None):
         detected_objects = []
     
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    #converts image from BGR color space to HSV
-
-    
     fire_lower = np.array([0, 120, 180])
     fire_upper = np.array([30, 255, 255])
 
     fire_mask = cv2.inRange(hsv, fire_lower, fire_upper)
-    #creates binary mask: whire pixels = fire-colored regions
-
     fire_ratio = np.sum(fire_mask >0) / fire_mask.size
-    #computes the fraction of image classified as fire-colored
 
-    
-    
     smoke_lower = np.array([0, 0, 40])
-    # lower HSV boundary for smoke-like gray/dark pixels
-
     smoke_upper = np.array([180, 80, 220])
-    # upper HSV boundary for smoke-like low-saturation pixels
 
     smoke_mask = cv2.inRange(hsv, smoke_lower, smoke_upper)
-    # creates mask for smoke-colored pixels
-
     smoke_ratio = np.sum(smoke_mask > 0) / smoke_mask.size
-    # calculates fraction of image that looks smoke-like
 
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    # converts to grayscale
-
+ 
     labels = [obj["label"] for obj in detected_objects]
 
 
@@ -67,8 +52,6 @@ def analyze_hazard(image_path: str, detected_objects: list = None):
     
 
     hazard_tier = "NONE"
-    # default fallback classification
-
     hazard_confidence = 0.0
 
 
@@ -113,23 +96,15 @@ def analyze_hazard(image_path: str, detected_objects: list = None):
 
 
     fire_score = min(fire_ratio / 0.08, 1.0)
-
     texture_score = min(variance / 500, 1.0)
-
     hazard_confidence = (fire_score * 0.7) + (texture_score * 0.3)    
+
 
     return {
         "fire_pixel_ratio": round(float(fire_ratio), 4),
-
         "smoke_pixel_ratio": round(float(smoke_ratio), 4),
-
-
         "texture_variance": round(float(variance), 2),
-
-
         "hazard_confidence": round(float(hazard_confidence), 2),
-
-
         "hazard_tier": hazard_tier
 
     }

@@ -53,25 +53,13 @@ def update_incident(
         incident.status = update_data.status
 
     if update_data.title is not None:
-        # checks if frontend sent a new title
-
         incident.title = update_data.title
-        # updates incident title
-
 
     if update_data.description is not None:
-        # checks if frontend sent a new description
-
         incident.description = update_data.description
-        # updates incident description
-
 
     if update_data.category is not None:
-        # checks if frontend sent a new category
-
         incident.category = update_data.category
-        # updates incident category
-    
 
     if update_data.severity is not None:
         incident.severity = update_data.severity

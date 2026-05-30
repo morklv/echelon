@@ -42,13 +42,12 @@ class IncidentCreate(BaseModel):
     latitude:  Optional[float] = Field(
         ge = -90,
         le = 90
-    ) #valid Earth latitude range
+    ) 
 
     longitude: Optional[float] = Field(
         ge = -180,
         le=180
-    ) #valid Earth longitude range
-
+    ) 
 
 class IncidentResponse(BaseModel):
     id: int
@@ -74,38 +73,37 @@ class IncidentResponse(BaseModel):
 
 
 class IncidentUpdate(BaseModel):
-    # schema for partially updating an incident
 
     title: Optional[str] = Field(
         default=None,
         min_length=3,
         max_length=100
     )
-    # optional new title
+
 
     description: Optional[str] = Field(
         default=None,
         min_length=5,
         max_length=1000
     )
-    # optional new description
+
 
     category: Optional[str] = Field(
         default=None,
         min_length=3,
         max_length=50
     )
-    # optional new category
+
 
     status: Optional[str] = None
-    # optional new status
+
 
     severity: Optional[int] = Field(
         default=None,
         ge=1,
         le=5
     )
-    # optional severity from 1 to 5
+
 
 class InfrastructureAssetCreate(BaseModel):
     #schema to create a new asset from api request
@@ -118,17 +116,13 @@ class InfrastructureAssetCreate(BaseModel):
     description: str | None = None
     operational_status: str = "NORMAL"
     geometry_type: str = "point"
-    #tells if an asset is a point or a line
     geometry_coordinates: str | None = None
-    #stores bridge/route coordinates as JSON text
 
 class InfrastructureAssetResponse(InfrastructureAssetCreate):
-    # schema for sending infrastructure asset back to frontend
 
     id: int
 
     risk_status: str = "NORMAL"
-    # sends NORMAL, DIRECT_RISK, or CASCADE_RISK to frontend
 
     model_config = ConfigDict(
         from_attributes = True

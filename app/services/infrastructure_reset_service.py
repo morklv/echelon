@@ -1,7 +1,5 @@
 from sqlalchemy.orm import Session
-
 from app import models
-
 
 def reset_infrastructure_risk(db: Session):
     assets = db.query(models.InfrastructureAsset).all()

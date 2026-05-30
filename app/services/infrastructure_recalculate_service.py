@@ -1,5 +1,4 @@
 from sqlalchemy.orm import Session
-
 from app import models
 from app.services.infrastructure_risk_service import find_nearby_assets
 

@@ -4,23 +4,13 @@ from typing import List
 from app import models, schemas
 from app.database import get_db
 from app.auth import get_current_user
-
-#repository
 from app.repositories import incident_repository
 from app.services import incident_service
-
-#imports for (image upload for incidents)
 from fastapi import UploadFile, File
-
-#websocket
 from app.services import websocket_service
-
-#for Background Tasks
 from fastapi import BackgroundTasks
 
 from app.services.infrastructure_risk_service import find_nearby_assets
-
-# imports infrastructure recommendation generator
 from app.services.llm_service import generate_infrastructure_recommendation
 
 
@@ -74,13 +64,8 @@ def get_incident(
 ):
     return incident_service.get_incident(
     incident_id=incident_id,
-    # passes URL incident ID
-
     db=db,
-    # passes database session
-
     current_user=current_user
-    # passes logged-in user
 )
 
 @router.delete("/{incident_id}")
@@ -91,13 +76,8 @@ async def delete_incident(
 ):
     return await incident_service.delete_incident(
     incident_id=incident_id,
-    # passes URL incident ID
-
     db=db,
-    # passes database session
-
     current_user=current_user
-    # passes logged-in user
 )
 
     return {
@@ -125,29 +105,15 @@ def upload_incident_image(
 # PATCH means partial update
 async def update_incident(
     incident_id: int,
-    # incident ID from URL
-
     update_data: schemas.IncidentUpdate,
-    # request body with fields to update
-
     db: Session = Depends(get_db),
-    # database session injected by FastAPI
-
     current_user: models.User = Depends(get_current_user)
-    # authenticated user from JWT token
 ):
     return await incident_service.update_incident(
         incident_id=incident_id,
-        # passes URL incident ID to service
-
         update_data=update_data,
-        # passes update body to service
-
         db=db,
-        # passes database session to service
-
         current_user=current_user
-        # passes authenticated user to service
     )
 
 @router.get("/{incident_id}/nearby-infrastructure")
@@ -155,37 +121,29 @@ def get_nearby_infrastructure_for_incident(
     incident_id: int,
     db: Session = Depends(get_db)
 ):
-    # gets affected infrastructure for one incident
 
     incident = db.query(models.Incident).filter(
         models.Incident.id == incident_id
     ).first()
-    # finds incident by database ID
 
     if incident is None:
-        # checks if incident was not found
-
         raise HTTPException(
             status_code=404,
             detail="Incident not found"
         )
-        # returns 404 if no incident exists
 
     infrastructure_result = find_nearby_assets(
         db=db,
         incident=incident,
         radius_km = 2.0
     )
-    # calculates direct/cascade infrastructure impact
 
     affected_assets = infrastructure_result["affected_assets"]
-    # extracts affected assets list from infrastructure result dictionary
 
     infrastructure_recommendation = generate_infrastructure_recommendation(
         incident,
         affected_assets
     )
-    # generates infrastructure recommendation using affected assets
 
     return {
         "incident_id": incident.id,

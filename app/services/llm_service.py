@@ -1,17 +1,9 @@
 import json
-# lets us convert image_analysis JSON string into Python dictionary
-
 import os 
-#to read enviroment variables env
-
 from dotenv import load_dotenv
-#to load variables from .env into python
-
 from openai import OpenAI
-#imports openai sdk (software development kit)
 
 load_dotenv() 
-#loads .env file into enviroment
 
 client = OpenAI(
     api_key = os.getenv("OPENAI_API_KEY")
@@ -26,27 +18,20 @@ def generate_incident_summary(
     image_analysis,
     nearby_assets=None
 ):
-    # creates readable operational summary for incident
 
     data = json.loads(image_analysis)
-    # converts image_analysis from JSON string into Python dictionary
 
     hazard = data.get("hazard_analysis", {})
-    # extracts fire/smoke hazard analysis
 
     fire_smoke = data.get("hazard_analysis", {})
 
     structural = data.get("structural_analysis", {})
-    # extracts structural damage analysis
 
     fusion = data.get("intelligence_fusion", {})
-    # extracts composite intelligence/risk scoring
 
     objects = data.get("detected_objects", [])
-    # extracts YOLO detected objects list
 
     detected_labels = [obj["label"] for obj in objects]
-    # creates simple list of detected object names
 
     traffic = data.get("traffic_activity", {})
 
@@ -54,7 +39,7 @@ def generate_incident_summary(
         obj.get("label", "unknown")
         for obj in objects
     )
-    # converts detected object labels into readable text
+
     nearby_assets = nearby_assets or []
 
     asset_lines = []
@@ -98,11 +83,9 @@ def generate_incident_summary(
     EVIDENCE:
     RECOMMENDED ACTION:
     """
-    # builds structured operational prompt
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
-        # low-cost OpenAI model
 
         messages=[
             {
@@ -121,11 +104,9 @@ def generate_incident_summary(
         ],
 
         temperature=0.2
-        # low creativity for stable operational outputs
     )
 
     return response.choices[0].message.content
-    # returns generated AI brief
 
 
 def generate_infrastructure_recommendation(
@@ -136,8 +117,6 @@ def generate_infrastructure_recommendation(
         return "No nearby infrastructure assets are currently affected."
     
     asset_lines = []
-    # empty list for asset summaries
-
     for asset in nearby_assets:
 
         distance = asset.get("distance_km")
@@ -159,7 +138,6 @@ def generate_infrastructure_recommendation(
         )
 
     assets_text = "\n".join(asset_lines)
-    #to combine all asset line into one text block
 
     return (
         "Infrastructure Impact Brief:\n\n"

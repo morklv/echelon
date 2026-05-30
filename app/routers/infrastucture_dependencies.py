@@ -61,7 +61,6 @@ def get_infrastructure_dependencies(
                 "risk_status": dependent_asset.risk_status
             }
         })
-        # creates frontend-ready dependency edge
 
     return {
         "dependency_count": len(graph_edges),

@@ -1,41 +1,22 @@
 import json
-#converts python dicts into json strings
-
 import shutil
-#lets us copy uploaded file data into out uploads folder
-
 from pathlib import Path
-
 from app.services.infrastructure_risk_service import find_nearby_assets
 from fastapi import HTTPException, status, UploadFile
-
 from sqlalchemy.orm import Session
-
 from app import models
 from app.repositories import incident_repository
 from app.services.cv_service import analyze_image
 from app.services.llm_service import generate_incident_summary
-
 from app import schemas
 from app.services import websocket_service
 from app.database import SessionLocal
-
 from fastapi import BackgroundTasks
-
-import asyncio # lets sync background task call async websocket functions
-
-#working with loggings
+import asyncio
 from app.core.logging_config import logger
-
-#for safer upload filenames
 from uuid import uuid4
-#creates unique random ids for filenames
-
-#for roles
 from app.core.permissions import require_roles
-
 from app.services.infrastructure_reset_service import reset_infrastructure_risk
-
 from app.services.infrastructure_recalculate_service import recalculate_infrastructure_risk
 
 ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"]
@@ -60,10 +41,6 @@ def upload_and_analyze_incident_image(
         ["operator", "admin"]
     )
 
-    # IMPORTANT:
-    # Do not search by owner_id here.
-    # Seeded demo incidents may belong to owner_id=1,
-    # while your logged-in user may have a different ID.
     incident = db.query(models.Incident).filter(
         models.Incident.id == incident_id
     ).first()
@@ -143,10 +120,7 @@ async def create_incident(
 
     await websocket_service.broadcast_event({
     "event": "incident_created",
-    # tells frontend what happened
-
     "incident_id": incident.id
-    # tells frontend which incident changed
     })
 
     recalculate_infrastructure_risk(db)
@@ -154,7 +128,6 @@ async def create_incident(
     await websocket_service.broadcast_event({
         "event": "infrastructure_updated"
     })
-
 
     return incident
 
@@ -174,17 +147,14 @@ def get_incident(
     db: Session,
     current_user: models.User
 ):
-    # admins can access all incidents
 
     if current_user.role == "admin":
 
         incident = db.query(models.Incident).filter(
             models.Incident.id == incident_id
         ).first()
-        # loads incident without ownership restriction
 
     else:
-        # operators can access only their own incidents
 
         incident = incident_repository.get_incident_by_id_and_owner(
             db=db,
@@ -202,13 +172,8 @@ def get_incident(
 
 async def delete_incident(
     incident_id: int,
-    # ID from URL: /incidents/{incident_id}
-
     db: Session,
-    # active database session
-
     current_user: models.User
-    # currently logged-in user
 ):
     require_roles(
     current_user,
@@ -217,22 +182,13 @@ async def delete_incident(
 
     incident = get_incident(
         incident_id=incident_id,
-        # passes incident ID
-
         db=db,
-        # passes database session
-
         current_user=current_user
-        # passes logged-in user
     )
-    # reuses get_incident so we do not duplicate ownership-check logic
 
     incident_repository.delete_incident(
         db=db,
-        # passes database session
-
         incident=incident
-        # passes incident object to delete
     )
     reset_infrastructure_risk(db)
 
@@ -244,21 +200,18 @@ async def delete_incident(
 
     await websocket_service.broadcast_event({
     "event": "incident_deleted",
-    # tells frontend that an incident was deleted
-
     "incident_id": incident_id
-    # tells frontend which incident was deleted
     })
 
 
     return {
         "message": "Incident deleted successfully"
     }
-    # returns success message to frontend/API
+
 
 
 async def update_incident(
-        incident_id: int, #ID from url:/incidents/Pincident_id}
+        incident_id: int,
 
         update_data: schemas.IncidentUpdate,
         
@@ -294,10 +247,7 @@ async def update_incident(
 
     await websocket_service.broadcast_event({
     "event": "incident_updated",
-    # tells frontend an incident was modified
-
     "incident_id": updated_incident.id
-    # tells frontend exactly which incident changed
     })
     return updated_incident
 
@@ -306,19 +256,15 @@ def process_uploaded_image(
         incident_id: int,
         file_path: str
 ):
-    # background CV processing pipeline
 
     db = SessionLocal()
-    # creates fresh database session for background task
 
     try:
         incident = db.query(models.Incident).filter(
             models.Incident.id == incident_id
         ).first()
-        # reloads incident safely from database
-
+  
         if incident is None:
-            # checks if incident was deleted before processing completed
 
             logger.error(
                 f"Incident {incident_id} not found during image processing"
@@ -327,16 +273,12 @@ def process_uploaded_image(
             return
 
         analysis_result = analyze_image(file_path)
-        # runs full OpenCV + YOLO intelligence pipeline
 
         infrastructure_result = find_nearby_assets(db, incident)
-        # calculates direct/cascade infrastructure impact
 
         nearby_assets = infrastructure_result["affected_assets"]
-        # extracts only affected assets list
 
         incident.image_analysis = json.dumps(analysis_result)
-        # stores structured CV analysis as JSON string
 
         incident.llm_summary = generate_incident_summary(
             title=incident.title,
@@ -346,10 +288,8 @@ def process_uploaded_image(
             image_analysis=incident.image_analysis,
             nearby_assets=nearby_assets
         )
-        # generates operational intelligence summary
 
         db.commit()
-        # saves analysis into PostgreSQL
 
         logger.info(
             f"Image analysis completed for incident {incident.id}"
@@ -361,15 +301,10 @@ def process_uploaded_image(
                 "incident_id": incident.id
             })
         )
-        # notifies frontend analysis has completed
-
     except Exception as e:
-        # catches unexpected CV processing failures
-
         logger.error(
             f"Image analysis failed for incident {incident_id}: {str(e)}"
         )
 
     finally:
         db.close()
-        # safely closes background database session

@@ -25,22 +25,12 @@ def analyze_fire_smoke(image_path: str):
 
     h, s, v = cv2.split(hsv)
 
-    # More restrictive fire detection:
-    # Requires bright red/orange/yellow, not just red paint.
     fire_red = cv2.inRange(hsv, np.array([0, 140, 170]), np.array([18, 255, 255]))
     fire_orange = cv2.inRange(hsv, np.array([18, 120, 180]), np.array([45, 255, 255]))
-
     fire_mask = cv2.bitwise_or(fire_red, fire_orange)
-
-    # Smoke detection:
-    # Gray, medium brightness, low saturation.
     smoke_mask = cv2.inRange(hsv, np.array([0, 0, 60]), np.array([180, 55, 185]))
-
-    # Suppress very bright sky/cloud regions.
     bright_sky_mask = cv2.inRange(hsv, np.array([0, 0, 185]), np.array([180, 70, 255]))
     smoke_mask[bright_sky_mask > 0] = 0
-
-    # Suppress bottom road/asphalt zone unless there is fire nearby.
     bottom_start = int(height * 0.65)
     smoke_mask[bottom_start:, :] = 0
 
@@ -50,7 +40,7 @@ def analyze_fire_smoke(image_path: str):
     smoke_mask = cv2.morphologyEx(smoke_mask, cv2.MORPH_OPEN, kernel)
     smoke_mask = cv2.morphologyEx(smoke_mask, cv2.MORPH_CLOSE, kernel)
 
-    # Remove huge flat background regions from smoke mask.
+
     num_labels, labels, stats, _ = cv2.connectedComponentsWithStats(smoke_mask)
 
     filtered_smoke = np.zeros_like(smoke_mask)
@@ -66,15 +56,12 @@ def analyze_fire_smoke(image_path: str):
         width_ratio = w / width
         height_ratio = h_box / height
 
-        # Reject massive sky/road-like regions.
         if area_ratio > 0.35:
             continue
 
-        # Reject long horizontal bands.
         if width_ratio > 0.55 and height_ratio < 0.25:
             continue
 
-        # Reject tiny noise.
         if area_ratio < 0.001:
             continue
 
@@ -91,13 +78,10 @@ def analyze_fire_smoke(image_path: str):
     texture_variance = cv2.Laplacian(gray, cv2.CV_64F).var()
     mean_brightness = float(np.mean(gray))
 
-    # Fire should not be triggered by red infrastructure alone.
     fire_score = min(fire_ratio * 40, 1.0)
 
-    # Smoke needs meaningful filtered smoke area.
     smoke_score = min(smoke_ratio * 8, 1.0)
 
-    # Extra penalty when scene has weak fire evidence.
     if fire_ratio < 0.006:
         fire_score *= 0.35
 

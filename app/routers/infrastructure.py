@@ -3,11 +3,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app import models, schemas
 from app.auth import get_current_user
-# gets logged-in user from JWT token
-
 from app.core.permissions import require_roles
-# checks whether user has allowed role
-
 
 router = APIRouter(
     prefix = "/infrastructure",
@@ -41,16 +37,11 @@ def create_infrastructure_asset(
         geometry_type = asset.geometry_type,
         geometry_coordinates = asset.geometry_coordinates
     )
-    #converts request schema into sqlalchemy database model
 
     db.add(new_asset)
-    # to stage a new asset for database insertion   
-
     db.commit()
 
     db.refresh(new_asset)
-    #reloads the asset with generated id
-
     return new_asset
 
 
@@ -59,8 +50,6 @@ def get_infrastructure_assets(
     db: Session = Depends(get_db)
 ):
     assets = db.query(models.InfrastructureAsset).all()
-    #selects all assets rows from database
-
     return assets
 
 
@@ -95,22 +84,12 @@ def update_infrastructure_asset(
     asset.latitude = asset_update.latitude
     asset.longitude = asset_update.longitude
     asset.criticality = asset_update.criticality
-    # updates permanent importance level
-
     asset.description = asset_update.description
-    # updates asset description
-
     asset.operational_status = asset_update.operational_status
-    # updates current operational state
-
     asset.geometry_type = asset_update.geometry_type
-    # updates point/line geometry type
-
     asset.geometry_coordinates = asset_update.geometry_coordinates
 
     db.commit()
-
     db.refresh(asset)
-
 
     return asset

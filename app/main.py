@@ -14,7 +14,6 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="ECHELON API")
 
-
 UPLOAD_DIR = Path("uploads")
 UPLOAD_DIR.mkdir(exist_ok=True)
 
@@ -23,8 +22,6 @@ app.mount(
     StaticFiles(directory=UPLOAD_DIR),
     name="uploads"
 )
-
-
 
 origins = [
     "http://127.0.0.1:5500",

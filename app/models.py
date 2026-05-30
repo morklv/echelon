@@ -126,12 +126,8 @@ class Incident(Base):
     
 class InfrastructureAsset(Base):
     __tablename__ = "infrastructure_assets"
-    #actual postgresql table name
 
     id = Column(Integer, primary_key = True, index = True)
-    # unique numeric id for each asset
-    # primary_key=True makes it the main identifier
-    # index=True speeds up database lookups
 
     name = Column(String, nullable = False)
 
@@ -148,15 +144,10 @@ class InfrastructureAsset(Base):
     operational_status = Column(String, default="NORMAL")
     
     risk_status = Column(String, default="NORMAL")
-    # stores whether asset is normal, directly affected, or cascade affected
 
-    #for the Bridge-like problem (not a point asset)
     geometry_type = Column(String, default = "point")
-    #tells backend if our asset is a point or a ine
 
     geometry_coordinates = Column(String, nullable = True)
-    #stores line coordinates as JSON text for bridges and ROUTES
-
 
 class InfrastructureDependency(Base):
     __tablename__ = "infrastructure_dependencies"
