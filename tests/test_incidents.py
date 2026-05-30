@@ -1,5 +1,4 @@
 from fastapi.testclient import TestClient
-
 from app.main import app
 
 client = TestClient(app)
@@ -56,12 +55,8 @@ def test_get_my_incidents():
     )
 
     assert response.status_code == 200
-    
     data = response.json()
-
     assert isinstance(data, list)
-    # to confirm that backend returns a list of incidents
-
 
 def test_update_incident():
     headers = get_auth_headers()
@@ -149,10 +144,8 @@ def test_viewer_cannot_create_incident():
             "password": "test123"
         }
     )
-    # logs in as viewer
 
     token = login_response.json()["access_token"]
-    # extracts JWT token
 
     response = client.post(
         "/incidents/",
@@ -168,13 +161,10 @@ def test_viewer_cannot_create_incident():
             "Authorization": f"Bearer {token}"
         }
     )
-    # viewer tries to create incident
-
     assert response.status_code == 403
-    # backend should block viewer
 
+    
 def test_operator_cannot_delete_incident():
-    # tests that operator can create but cannot delete
 
     client.post(
         "/auth/register",
