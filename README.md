@@ -101,6 +101,18 @@ Operators can create incidents directly from the map interface by selecting a lo
 
 The examples below demonstrate how Echelon combines computer vision, infrastructure analysis, and AI-generated operational summaries.
 
+### Structural Damage Assessment
+
+Visible structural damage detected near critical infrastructure.
+
+<p align="center">
+  <img src="screenshots/bridge-image.png" width="32%">
+  <img src="screenshots/bridge-analysis.png" width="32%">
+  <img src="screenshots/bridge-brief.png" width="32%">
+</p>
+
+This scenario demonstrates structural damage scoring, scene assessment, infrastructure impact evaluation, and AI-assisted recommendations.
+
 ### Traffic Congestion Assessment
 
 Heavy vehicle congestion detected near critical transportation routes.
@@ -125,17 +137,7 @@ Power grid fire affecting regional infrastructure assets.
 
 The image is processed through fire and smoke detection, structural analysis, hazard scoring, infrastructure impact assessment, and composite risk scoring. The results are then summarized into an operational briefing.
 
-### Structural Damage Assessment
 
-Visible structural damage detected near critical infrastructure.
-
-<p align="center">
-  <img src="screenshots/bridge-image.png" width="32%">
-  <img src="screenshots/bridge-analysis.png" width="32%">
-  <img src="screenshots/bridge-brief.png" width="32%">
-</p>
-
-This scenario demonstrates structural damage scoring, scene assessment, infrastructure impact evaluation, and AI-assisted recommendations.
 
 ### Infrastructure Dependency Analysis
 
