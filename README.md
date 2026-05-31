@@ -4,15 +4,9 @@ Operational Intelligence Platform for Real-Time Infrastructure Monitoring and In
 
 ## Overview
 
-I built ECHELON to explore how modern backend systems, computer vision, geospatial data, and AI-generated analysis could work together inside a single application.
+ECHELON is a full-stack operational intelligence platform built to explore the intersection of backend engineering, computer vision, geospatial systems, and AI-assisted analysis.
 
-The idea started as a simple incident reporting platform, but gradually evolved into a larger project focused on operational awareness. Users can create incidents, upload images, view nearby infrastructure, analyze possible impacts, and receive automated summaries generated from the available information.
-
-The goal was not to build a perfect emergency management system. Instead, I wanted a project that would allow me to learn and combine several areas of software engineering that interested me, including backend development, databases, real-time communication, computer vision, mapping, and AI integration.
-
-ECHELON is the result of that process.
-
-The project was built using FastAPI, PostgreSQL, OpenCV, YOLOv8, WebSockets, and OpenAI-powered reporting workflows.
+The platform combines incident management, evidence image analysis, infrastructure impact assessment, real-time updates, and AI-generated operational reporting. More than a finished product, ECHELON served as a learning project that allowed me to design, build, and deploy a system using FastAPI, PostgreSQL, OpenCV, YOLOv8, WebSockets, Docker, and OpenAI APIs while gaining hands-on experience across multiple areas of software engineering.
 
 
 
