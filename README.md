@@ -16,7 +16,7 @@ The project was built using FastAPI, PostgreSQL, OpenCV, YOLOv8, WebSockets, and
 
 
 
-## Whhat the Porject Can Do
+## What the Project Can Do
 
 - JWT-based user authentication
 - Real-time incident management
@@ -51,12 +51,9 @@ The project was built using FastAPI, PostgreSQL, OpenCV, YOLOv8, WebSockets, and
 - YOLOv8
 - NumPy
 
-### AI
+### AI and analysis
 
 - OpenAI API
-
-### Custom Analysis
-
 - Risk scoring and analysis aggregation
 - Infrastructure impact assessment
 - Dependency analysis
