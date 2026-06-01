@@ -38,6 +38,7 @@ The platform combines incident management, evidence image analysis, infrastructu
 - Alembic
 - JWT Authentication
 - WebSockets
+- PyTest
 
 ### Computer Vision
 
